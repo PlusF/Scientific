@@ -18,7 +18,7 @@ plt.rcParams['figure.subplot.bottom'] = 0.2
 plt.rcParams['figure.subplot.left'] = 0.2
 
 
-def delta(x, n_delta=10000):  # デルタ関数はガウス関数で近似. nを大きくするほどデルタ関数に近づく
+def delta(x, n_delta: int = 10000):  # デルタ関数はガウス関数で近似. nを大きくするほどデルタ関数に近づく
     ret = np.exp(-1 * n_delta * x ** 2)
     return np.sqrt(n_delta / np.pi) * ret
 
@@ -58,26 +58,26 @@ class DOSOfCNT:
         self.band_of_graphene = BandOfGraphene()
         self.band_of_graphene.s = 0  # 結合性バンド，半結合性バンドが対称になる
 
-    def E_mu(self, k, mu, sign):  # グラフェンのエネルギー分散関係に，CNTの量子化条件を入れる
+    def E_mu(self, k: float, mu: int, sign: str) -> float:  # グラフェンのエネルギー分散関係に，CNTの量子化条件を入れる
         x, y = k * self.K2 / np.linalg.norm(self.K2) + mu * self.K1
         return self.band_of_graphene.E_2g(x, y, sign)
 
-    def DOS(self, E):
+    def DOS(self, E: np.ndarray) -> float:
         ret = 0
         for k in tqdm(self.k_range):
             for mu in range(1, self.N + 1):
                 ret += self.dk * (delta(E - self.E_mu(k, mu, '+')) + delta(E - self.E_mu(k, mu, '-')))  # 結合性バンドと反結合性バンドのDOSの和
         return ret / (2 * np.pi) / 2
 
-    def plot(self, E_range: tuple, direction: str = 'vertical'):
+    def plot(self, E_range: tuple, direction: str = 'vertical') -> None:
         if len(E_range) != 2:
             print('E_range should be tuple of 2 elements.')
-            return -1
+            return
         if E_range[0] > E_range[1]:
             E_range = (E_range[1], E_range[0])
         if direction not in ['vertical', 'horizontal']:
             print('wrong direction. direction should be "vertical" or "horizontal".')
-            return -1
+            return
 
         plt.figure(figsize=(8, 10))
         E = np.linspace(*E_range, 1000)
@@ -99,7 +99,7 @@ class DOSOfCNT:
             plt.yticks(range(E_range[0], E_range[1] + 1))
         else:
             print('wrong direction. direction should be "vertical" or "horizontal".')
-            return 0
+            return
         plt.show()
 
 

@@ -24,7 +24,7 @@ class BandOfGraphene:
         print('wrong sign. sign should be "+" or "-".')
         return -1
 
-    def plot(self, n=100):
+    def plot(self, n: int = 100):
         # プロットの設定
         plt.rcParams["font.size"] = 20
         plt.rcParams["font.family"] = 'Times New Roman'
